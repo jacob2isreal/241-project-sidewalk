@@ -163,6 +163,7 @@ public class ShortestPaths {
       // TODO 4: create a ShortestPaths object, use it to compute shortest
       // paths data from the origin node given by origCode.
       ShortestPaths sp = new ShortestPaths(); 
+      Node origin = graph.getNode(SidewalkOrigCode);
       if (origin != null) {
           sp.compute(origin);
       }
@@ -174,7 +175,7 @@ public class ShortestPaths {
       // origCode to destCode, followed by the total path length
       // If no path exists, print a message saying so.
       if (SidewalkDestCode == null) {
-          for (Node node : graph.getNodes()) {
+          for (Node node : graph.getNodes().values()) {
               double dist = sp.shortestPathLength(node);
               if (dist != Double.POSITIVE_INFINITY) {
                   System.out.println(node + ": " + dist);
