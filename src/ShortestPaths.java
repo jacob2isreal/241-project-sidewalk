@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.PriorityQueue; 
 
 /** Provides an implementation of Dijkstra's single-source shortest paths
  * algorithm.
@@ -16,7 +17,7 @@ import java.io.FileNotFoundException;
  *   double abPathLength = sp.getShortestPathLength(b);
  *   */
 public class ShortestPaths {
-    // stores auxiliary data associated with each node for the shortest
+    // stores auxiliary data ass    ociated with each node for the shortest
     // paths computation:
     private HashMap<Node,PathData> paths;
 
@@ -26,11 +27,41 @@ public class ShortestPaths {
      * back pointer to the previous node on the shortest path.
      * Precondition: origin is a node in the Graph.*/
     public void compute(Node origin) {
+        HashMap<Node, Boolean> visited = new HashMap<>();
         paths = new HashMap<Node,PathData>();
+        paths.put(origin, new PathData(0.0, null));
+        PriorityQueue<Node> queue = new PriorityQueue<>(); 
+        queue.add(origin);
 
-        // TODO 1: implement Dijkstra's algorithm to fill paths with
-        // shortest-path data for each Node reachable from origin.
+        while(!queue.isEmpty()){
+            Node n = queue.remove();
+            PathData data = paths.get(n);
+            if(!visited.containsKey(n))
 
+            if (visited.containsKey(n)) {
+                continue;
+            }
+
+            visited.put(n, true);
+
+            PathData nData = paths.get(n);
+            double nDist = data.distance;
+
+            for(HashMap.Entry<Node, Double> edge : n.getNeighbors().entrySet()){
+                Node n1 = edge.getKey();
+                double weight = edge.getValue();
+                double newDist = nDist + weight; 
+                PathData n1Data = paths.get(n1);
+                double n1Dist = (n1Data == null) ? Double.POSITIVE_INFINITY : n1Data.distance;
+
+                if(newDist < n1Dist){
+                    paths.put(n1, new PathData(newDist, n));
+                    queue.add(n1);
+                }
+
+            }
+
+        }
     }
 
     /** Returns the length of the shortest path from the origin to destination.
@@ -38,9 +69,12 @@ public class ShortestPaths {
      * Precondition: destination is a node in the graph, and compute(origin)
      * has been called. */
     public double shortestPathLength(Node destination) {
-        // TODO 2 - implement this method to fetch the shortest path length
-        // from the paths data computed by Dijkstra's algorithm.
-        throw new UnsupportedOperationException();
+        PathData data = paths.get(destination);
+        if(data != null){
+            return data.distance;
+        } else {
+            return Double.POSITIVE_INFINITY;
+        }
     }
 
     /** Returns a LinkedList of the nodes along the shortest path from origin
@@ -50,10 +84,21 @@ public class ShortestPaths {
      * Precondition: destination is a node in the graph, and compute(origin)
      * has been called. */
     public LinkedList<Node> shortestPath(Node destination) {
-        // TODO 3 - implement this method to reconstruct sequence of Nodes
-        // along the shortest path from the origin to destination using the
-        // paths data computed by Dijkstra's algorithm.
-        throw new UnsupportedOperationException();
+        LinkedList<Node> path = new LinkedList<>();
+        Node n = destination;
+        while(n != null){
+            PathData data = paths.get(n);
+            
+            if(data == null){
+                return null;
+            }
+            path.addFirst(n);
+            n = data.previous;
+        }
+        if(path.isEmpty()){
+            return null;
+        }
+        return path;
     }
 
 
@@ -69,7 +114,6 @@ public class ShortestPaths {
             previous = prev;
         }
     }
-
 
     /** Static helper method to open and parse a file containing graph
      * information. Can parse either a basic file or a CSV file with
