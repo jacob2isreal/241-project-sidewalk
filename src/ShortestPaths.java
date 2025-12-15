@@ -162,14 +162,39 @@ public class ShortestPaths {
 
       // TODO 4: create a ShortestPaths object, use it to compute shortest
       // paths data from the origin node given by origCode.
-
+      ShortestPaths sp = new ShortestPaths(); 
+      if (origin != null) {
+          sp.compute(origin);
+      }
       // TODO 5:
       // If destCode was not given, print each reachable node followed by the
       // length of the shortest path to it from the origin.
-
       // TODO 6:
       // If destCode was given, print the nodes in the path from
       // origCode to destCode, followed by the total path length
       // If no path exists, print a message saying so.
+      if (SidewalkDestCode == null) {
+          for (Node node : graph.getNodes()) {
+              double dist = sp.shortestPathLength(node);
+              if (dist != Double.POSITIVE_INFINITY) {
+                  System.out.println(node + ": " + dist);
+              }
+          }
+      } else { 
+        Node d = graph.getNode(SidewalkDestCode);
+        if(d == null){
+            System.out.println("Destination not found: " + SidewalkDestCode);
+            return;
+        }
+        LinkedList<Node> path = sp.shortestPath(d);
+        if(path == null){
+            System.out.println("No path found from " + SidewalkOrigCode + " to " + SidewalkDestCode);
+        } else {
+            for (Node n : path){
+                System.out.println(n);
+            }
+            System.out.println("Path length: " + sp.shortestPathLength(d));
+        }
+      }
     }
 }
