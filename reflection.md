@@ -1,0 +1,5 @@
+I was having some issues with some nodes ALWAYS choosing the shortest path to another node. I think there is some flaw with my logic somewhere, or possibly an issue with how I used the priority queue. I'm pretty sure my ShortestPathLengh method works fine, so it probably comes down to the admittidly sloppy compute method, which has been very difficult to create, and alter anytime there was an issue.
+
+There are many ways to tackle issues. When working on this I found there were different ways to potetially hold the paths, but ultimately I landed on a priority queue in the compute method. I also learned it's very important to have good fundamentals in computer science, and in this case, with data structures, because it makes creating these larger projects way easier to start, and comprehend later down the road.
+
+The compute method easily took the longest. Even when I thought I was done, I kept running into problem after problem, which made it the most revisted part of the assignment. 
