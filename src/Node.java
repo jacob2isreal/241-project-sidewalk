@@ -5,7 +5,7 @@ import java.util.HashMap;
  * map that associates each neighboring node with the weight of the edge to
  * that node. It is the responsibility of the user of this class to avoid
  * making multiple Nodes with the same unique identifier. */
-public class Node implements Comparable<Node> {
+public class Node{
 
     private final String id; // unique identifier for this node
 
@@ -56,11 +56,5 @@ public class Node implements Comparable<Node> {
     public int hashCode() {
       return id.hashCode();
     }
-    @Override
-    public int compareTo(Node n2) {
-	if (n2 == null) {
-	    throw new NullPointerException("Cannot compare Node to null");
-	}
-	return this.id.compareTo(n2.id);
-    }
+    
 }

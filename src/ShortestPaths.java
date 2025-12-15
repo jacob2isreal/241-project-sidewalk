@@ -27,36 +27,30 @@ public class ShortestPaths {
      * back pointer to the previous node on the shortest path.
      * Precondition: origin is a node in the Graph.*/
     public void compute(Node origin) {
-        HashMap<Node, Boolean> visited = new HashMap<>();
         paths = new HashMap<Node,PathData>();
         paths.put(origin, new PathData(0.0, null));
-        PriorityQueue<Node> queue = new PriorityQueue<>(); 
-        queue.add(origin);
-
+        PriorityQueue<NodeDistance> queue = new PriorityQueue<>();
+        queue.add(new NodeDistance(origin,0.0));
+	
         while(!queue.isEmpty()){
-            Node n = queue.remove();
-            PathData data = paths.get(n);
-            if(!visited.containsKey(n))
+	    NodeDistance entry = queue.poll();
+            Node n = entry.node;
+            double nDist = entry.distance;
 
-            if (visited.containsKey(n)) {
-                continue;
-            }
-
-            visited.put(n, true);
-
-            PathData nData = paths.get(n);
-            double nDist = data.distance;
-
-            for(HashMap.Entry<Node, Double> edge : n.getNeighbors().entrySet()){
+	    if(nDist > paths.get(n).distance){
+		continue;
+	    }
+	    
+            for(Map.Entry<Node, Double> edge : n.getNeighbors().entrySet()){
                 Node n1 = edge.getKey();
                 double weight = edge.getValue();
-                double newDist = nDist + weight; 
+                double newDist = paths.get(n).distance + weight; 
                 PathData n1Data = paths.get(n1);
                 double n1Dist = (n1Data == null) ? Double.POSITIVE_INFINITY : n1Data.distance;
-
+		
                 if(newDist < n1Dist){
                     paths.put(n1, new PathData(newDist, n));
-                    queue.add(n1);
+                    queue.add(new NodeDistance(n1, newDist));
                 }
 
             }
@@ -115,6 +109,20 @@ public class ShortestPaths {
         }
     }
 
+    private static class NodeDistance implements Comparable<NodeDistance> {
+	Node node;
+	double distance;
+
+	NodeDistance(Node node, double distance) {
+	    this.node = node;
+	    this.distance = distance;
+	}
+
+	   @Override
+		    public int compareTo(NodeDistance other) {
+			return Double.compare(this.distance, other.distance);
+		    }
+    }
     /** Static helper method to open and parse a file containing graph
      * information. Can parse either a basic file or a CSV file with
      * sidewalk data. See GraphParser, BasicParser, and DBParser for more.*/
